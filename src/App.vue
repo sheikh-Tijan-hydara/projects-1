@@ -1,16 +1,26 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <TheHeader
+    title="Remember Me"
+  ></TheHeader>
+  <TheResource></TheResource>
+  <!-- <StoredResource></StoredResource> -->
+ 
 </template>
 
+  
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TheHeader from './components/layouts/TheHeader.vue';
+import TheResource from './components/Resources/TheResource.vue';
+// import StoredResource from './components/Resources/StoredResource.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    TheHeader,
+    TheResource,
+    // StoredResource,
+  },
+ 
 }
 </script>
 
@@ -19,7 +29,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }
