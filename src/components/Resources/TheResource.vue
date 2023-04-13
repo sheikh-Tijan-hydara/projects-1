@@ -2,8 +2,7 @@
     <base-card>
         <base-button v-on:click="() => setSelectedTab('StoredResource')">Stored Resource</base-button>
         <base-button @click="() => setSelectedTab('AddResourece')" > Add Resource</base-button>
-
-       
+        <h1 v-if="isloading">Loading</h1>
     </base-card>
     <KeepAlive>
          <component :is="selectedTab"></component>
@@ -13,7 +12,11 @@
 <script>
 import StoredResource from './StoredResource.vue';
 import AddResourece from './AddResourece.vue';
+
+
     export default{
+       
+       
         components: {
             AddResourece,
             StoredResource
@@ -21,28 +24,8 @@ import AddResourece from './AddResourece.vue';
         data(){
             return {
             selectedTab: 'StoredResource',
-            storedResources:[
-                {
-                    id: 1,
-                    title: 'Vue js',
-                    description: 'This is the content of Vue js',
-                    url: 'www.google.com'
-                },
-                {
-                    id: 2,
-                    title: 'React js',
-                    description: 'This is the content of React js',
-                    url: 'www.google.com'
-                },
-                {
-                    id: 3,
-                    title: 'Angular js',
-                    description: 'This is the content of Angular',
-                    url: 'www.google.com'
-                },
-            ]
-             
-    
+            storedResources:[],
+            isloading: false,
             }
          },
          provide(){
@@ -50,6 +33,7 @@ import AddResourece from './AddResourece.vue';
                 resources: this.storedResources,
                 addNewResource: this.addResource,
                 deleteResource: this.removeResource,
+                isloading: this.isloading
             }
          },
         methods:
@@ -59,21 +43,44 @@ import AddResourece from './AddResourece.vue';
             },
 
            addResource(title, description, link){
-                const newResoure={
+                const newResource={
                     id: new Date().toISOString(),
                     title: title,
                     description: description,
                     url: link
                 };
-                this.storedResources.push(newResoure);
+                fetch('https://vue-project-1-b0a50-default-rtdb.firebaseio.com/resources.json', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newResource)
+                })
+                this.storedResources.push(newResource);
                 this.selectedTab = 'StoredResource';
            },
-           removeResource(resId){
+           async removeResource(resId){
             const resIndex = this.storedResources.findIndex(res => resId === res.id );
             this.storedResources.splice(resIndex, 1);
-           },
-         
+         },
 
+           
+          
+           
+           async loadResources(){
+            this.isloading = true;
+            const response = await fetch('https://vue-project-1-b0a50-default-rtdb.firebaseio.com/resources.json');
+            const data = await response.json();
+            this.isloading = false;
+            for (const key of Object.keys(data)){
+                this.storedResources.push(data[key]);
+            }
+            },
+
+        },
+        created(){
+            this.loadResources();
         }
+       
     }
 </script>

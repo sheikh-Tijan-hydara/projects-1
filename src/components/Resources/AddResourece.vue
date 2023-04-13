@@ -50,6 +50,9 @@
           return;
         }
         this.addNewResource(enteredTitle, enteredDescription, enteredLink);
+        this.$refs.titleInput.value = '';
+        this.$refs.descInput.value = '';
+        this.$refs.linkInput.value = '';
       },
       confirmError(){
         this.inputIsValid = false;

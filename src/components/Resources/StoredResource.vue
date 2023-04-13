@@ -1,4 +1,5 @@
 <template>
+    
     <ul>
         <ResourceItem
             v-for="res in resources" :key="res.id"
