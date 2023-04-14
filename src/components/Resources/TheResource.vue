@@ -12,6 +12,7 @@
 <script>
 import StoredResource from './StoredResource.vue';
 import AddResourece from './AddResourece.vue';
+// import axios from 'axios';
 
 
     export default{
@@ -60,20 +61,30 @@ import AddResourece from './AddResourece.vue';
                 this.selectedTab = 'StoredResource';
            },
            async removeResource(resId){
-            const resIndex = this.storedResources.findIndex(res => resId === res.id );
-            this.storedResources.splice(resIndex, 1);
+               // axios.delete('https://vue-project-1-b0a50-default-rtdb.firebaseio.com/resources/' + resId);
+            //    console.log(resId);
+            //    return;
+               try {
+                   const deleteOption = {method: 'DELETE'};
+                   const url = `https://vue-project-1-b0a50-default-rtdb.firebaseio.com/resources/${resId}.json`
+                   await fetch(url , deleteOption);
+                   const resIndex = this.storedResources.findIndex(res => resId === res.id );
+                   this.storedResources.splice(resIndex, 1);
+
+               } catch (error) {
+                    console.log(error);
+               }
+
+            
          },
 
-           
-          
-           
            async loadResources(){
             this.isloading = true;
             const response = await fetch('https://vue-project-1-b0a50-default-rtdb.firebaseio.com/resources.json');
             const data = await response.json();
             this.isloading = false;
-            for (const key of Object.keys(data)){
-                this.storedResources.push(data[key]);
+            for (const [key, value] of Object.entries(data)) {
+                this.storedResources.push({...value, key});
             }
             },
 

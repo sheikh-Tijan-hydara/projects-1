@@ -3,7 +3,7 @@
     <ul>
         <ResourceItem
             v-for="res in resources" :key="res.id"
-            :id="res.id"
+            :id="res.key"
             :title="res.title"
             :description="res.description"
             :url="res.url"
